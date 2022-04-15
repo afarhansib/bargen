@@ -53,6 +53,7 @@
       <input type="text" name="gap" id="gap" placeholder="10mm">
     </label>
     <button id="set-gap">Atur Gap</button>
+    <button id="simulate-stiker">Preview A3+</button>
     <div id="barcode-area">
     </div>
   </main>
@@ -74,6 +75,8 @@
     const gap = document.getElementById("gap")
     const setGapBtn = document.getElementById("set-gap")
 
+    const simA3plusBtn = document.getElementById("simulate-stiker")
+
     const generate = ev => {
       barcodeArea.innerHTML = ""
       let data = dataInput.value.split(/\r?\n/)
@@ -86,7 +89,7 @@
           JsBarcode(`#barcode${i}`, e)
           
           return new Promise(res => {
-            setTimeout(res, 500)
+            setTimeout(res, 100)
           })
         })
       })
@@ -96,6 +99,15 @@
     setGapBtn.addEventListener("click", () => {
       console.log(gap.value)
       dynamicStyle.innerHTML = `svg[id*="barcode"] {margin: calc(${gap.value} / 2);}`
+    })
+
+    simA3plusBtn.addEventListener("click", () => {
+      barcodeArea.setAttribute("style", `
+    width: 32cm;
+    height: 48cm;
+    border: 1px solid;
+    padding: 5mm;
+    overflow: hidden;`)
     })
   </script>
 </body>
