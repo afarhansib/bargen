@@ -1,114 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bargen - Barcode Generator</title>
-  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@latest/dist/JsBarcode.all.min.js"></script>
-  <style>
-    #barcode-area {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    svg[id*="barcode"] {
-      border: 2px solid black;
-      margin: 10mm;
-      width: 3cm;
-      height: 1.5cm;
-    }
-
-    @media print {
-      body * {
-        visibility: hidden;
-      }
-      #barcode-area, #barcode-area * {
-        visibility: visible;
-      }
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bargen - Barcode Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@latest/dist/JsBarcode.all.min.js"></script>
+    <style>
       #barcode-area {
-        position: absolute;
-        left: 0;
-        top: 0;
+        display: flex;
+        flex-wrap: wrap;
       }
 
-      #barcode-area > * {
-        border: 0.25mm solid black;
+      .barcode-wrapper {
+        margin: 10mm;
         width: 3cm;
         height: 1.5cm;
+        position: relative;
+        padding: 1px;
       }
-    }
-  </style>
-</head>
-<body>
-  <style id="dynamic-style"></style>
-  <header>
-    <h1>Bargen</h1>
-    <p>Barcode Generator</p>
-  </header>
-  <main>
-    <textarea name="data-input" id="data-input" cols="30" rows="10" placeholder="Enter your data here..."></textarea>
-    <button id="generate">Generate</button>
-    <label for="gap">
-      <input type="text" name="gap" id="gap" placeholder="10mm">
-    </label>
-    <button id="set-gap">Atur Gap</button>
-    <button id="simulate-stiker">Preview A3+</button>
-    <div id="barcode-area">
-    </div>
-  </main>
-  <footer>
-    <p title="15 Apr 2022 - ">
-      made with 
-      <i style="color: red; text-shadow: 0px 0px 1px black;">&hearts;</i>
-      by
-      <a href="https://afarhansib.github.io/">afarhansib</a>
-      in Jembaran
-    </p>
-  </footer>
-  <script>
-    const dataInput = document.getElementById("data-input")
-    const genBtn = document.getElementById("generate")
-    const barcodeArea = document.getElementById("barcode-area")
-    const dynamicStyle = document.getElementById("dynamic-style")
 
-    const gap = document.getElementById("gap")
-    const setGapBtn = document.getElementById("set-gap")
+      .barcode-wrapper::after {
+        content: "";
+        /* background: aquamarine; */
+        width: 100%;
+        top: 0;
+        left: 0;
+        height: 100%;
+        border: 1.5px solid black;
+        display: block;
+        box-sizing: border-box;
+        position: absolute;
+        z-index: 1;
+        opacity: 1;
+      }
 
-    const simA3plusBtn = document.getElementById("simulate-stiker")
+      .barcode-wrapper > * {
+        width: 100%;
+        height: 100%;
+      }
 
-    const generate = ev => {
-      barcodeArea.innerHTML = ""
-      let data = dataInput.value.split(/\r?\n/)
-      let promise = Promise.resolve()
-      data.forEach((e, i) => {
-        if (e === "") return
-        promise = promise.then(() => {
-          
-          barcodeArea.insertAdjacentHTML("beforeend", `<svg id="barcode${i}"></svg>`)
-          JsBarcode(`#barcode${i}`, e)
-          
-          return new Promise(res => {
-            setTimeout(res, 100)
-          })
-        })
-      })
-    }
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        #barcode-area,
+        #barcode-area * {
+          visibility: visible;
+        }
+        #barcode-area {
+          position: absolute;
+          left: 0;
+          top: 0;
+        }
 
-    genBtn.addEventListener("click", generate)
-    setGapBtn.addEventListener("click", () => {
-      console.log(gap.value)
-      dynamicStyle.innerHTML = `svg[id*="barcode"] {margin: calc(${gap.value} / 2);}`
-    })
+        #barcode-area > * {
+          /* border: 0.25mm solid black; */
+          width: 3cm;
+          height: 1.5cm;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <style id="dynamic-style"></style>
+    <header>
+      <h1>Bargen</h1>
+      <p>Barcode Generator</p>
+    </header>
+    <main>
+      <textarea
+        name="data-input"
+        id="data-input"
+        cols="30"
+        rows="10"
+        placeholder="Enter your data here..."
+      ></textarea>
+      <button id="generate">Generate</button>
+      <label for="gap">
+        <input type="text" name="gap" id="gap" placeholder="10mm" />
+      </label>
+      <button id="set-gap">Atur Gap</button>
+      <button id="simulate-stiker">Preview A3+</button>
+      <div id="barcode-area"></div>
+    </main>
+    <footer>
+      <p title="15 Apr 2022 - ">
+        made with
+        <i style="color: red; text-shadow: 0px 0px 1px black">&hearts;</i>
+        by
+        <a href="https://afarhansib.github.io/">afarhansib</a>
+        in Jembaran
+      </p>
+    </footer>
+    <script>
+      const dataInput = document.getElementById("data-input");
+      const genBtn = document.getElementById("generate");
+      const barcodeArea = document.getElementById("barcode-area");
+      const dynamicStyle = document.getElementById("dynamic-style");
 
-    simA3plusBtn.addEventListener("click", () => {
-      barcodeArea.setAttribute("style", `
+      const gap = document.getElementById("gap");
+      const setGapBtn = document.getElementById("set-gap");
+
+      const simA3plusBtn = document.getElementById("simulate-stiker");
+
+      const generate = (ev) => {
+        barcodeArea.innerHTML = "";
+        let data = dataInput.value.split(/\r?\n/);
+        let promise = Promise.resolve();
+        data.forEach((e, i) => {
+          if (e === "") return;
+          promise = promise.then(() => {
+            barcodeArea.insertAdjacentHTML(
+              "beforeend",
+              `<div class="barcode-wrapper"><svg id="barcode${i}"></svg></div>`
+            );
+            JsBarcode(`#barcode${i}`, e, {
+              height: 80,
+            });
+
+            return new Promise((res) => {
+              setTimeout(res, 100);
+            });
+          });
+        });
+      };
+
+      genBtn.addEventListener("click", generate);
+      setGapBtn.addEventListener("click", () => {
+        console.log(gap.value);
+        dynamicStyle.innerHTML = `.barcode-wrapper {margin: calc(${gap.value} / 2);}`;
+      });
+
+      simA3plusBtn.addEventListener("click", () => {
+        barcodeArea.setAttribute(
+          "style",
+          `
     width: 32cm;
     height: 48cm;
     border: 1px solid;
     padding: 5mm;
-    overflow: hidden;`)
-    })
-  </script>
-</body>
+    overflow: hidden;`
+        );
+      });
+    </script>
+  </body>
 </html>
